@@ -1,4 +1,4 @@
-module github.com/project-flogo/contrib/activity/sqlquery
+module github.com/magallardo/contrib/activity/sqlquery
 
 require (
 	github.com/go-sql-driver/mysql v1.6.0
