@@ -6,6 +6,9 @@ import (
 	"strings"
 
 	"github.com/project-flogo/core/data/coerce"
+
+	_ "github.com/go-sql-driver/mysql" //required if mysql driver is selected
+	_ "github.com/lib/pq"              //required if postgres driver is selected
 )
 
 type DbType int8
