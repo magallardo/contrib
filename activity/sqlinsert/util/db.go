@@ -6,6 +6,8 @@ import (
 	"strings"
 
 	"github.com/project-flogo/core/data/coerce"
+
+	_ "github.com/lib/pq" //required if postgres driver is selected
 )
 
 type DbType int8

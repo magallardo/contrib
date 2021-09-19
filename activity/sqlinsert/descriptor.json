@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "title": "SQL Database Insert Activity",
   "description": "Flogo Activity for SQL",
-  "homepage": "https://github.com/project-flogo/contrib/tree/master/activity/sqlinsert",
+  "homepage": "https://github.com/magallardo/contrib/tree/master/activity/sqlinsert",
   "settings": [
     {
       "name": "dbType",

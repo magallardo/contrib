@@ -27,6 +27,9 @@ func New(ctx activity.InitContext) (activity.Activity, error) {
 		return nil, err
 	}
 
+	//MAG
+	log.RootLogger().Infof("New SQL Query activity: %v", s)
+
 	dbHelper, err := util.GetDbHelper(s.DbType)
 	if err != nil {
 		return nil, err
@@ -45,6 +48,9 @@ func New(ctx activity.InitContext) (activity.Activity, error) {
 		return nil, err
 	}
 
+	//MAG
+	log.RootLogger().Infof("DBQuery: %s", s.Query)
+
 	if sqlStatement.Type() != util.StSelect {
 		return nil, fmt.Errorf("only select statement is supported")
 	}
@@ -52,6 +58,8 @@ func New(ctx activity.InitContext) (activity.Activity, error) {
 	act := &Activity{db: db, dbHelper: dbHelper, sqlStatement: sqlStatement}
 
 	if !s.DisablePrepared {
+		//MAG
+		log.RootLogger().Infof("Using prepared statement: %s", sqlStatement.PreparedStatementSQL())
 		ctx.Logger().Debugf("Using PreparedStatement: %s", sqlStatement.PreparedStatementSQL())
 		act.stmt, err = db.Prepare(sqlStatement.PreparedStatementSQL())
 		if err != nil {
@@ -90,11 +98,18 @@ func (a *Activity) Cleanup() error {
 // Eval implements activity.Activity.Eval
 func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 
+	//MAG
+	log.RootLogger().Infof("In eval: %v", ctx)
+
 	in := &Input{}
 	err = ctx.GetInputObject(in)
 	if err != nil {
 		return false, err
 	}
+
+	//MAG
+	log.RootLogger().Infof("Eval input: %v", in)
+	log.RootLogger().Infof("Eval input params: %v", in.Params)
 
 	results, err := a.doSelect(in.Params)
 	if err != nil {
@@ -106,6 +121,9 @@ func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 		return false, err
 	}
 
+	//MAG
+	log.RootLogger().Infof("Eval results: %v", results)
+
 	return true, nil
 }
 
@@ -115,9 +133,11 @@ func (a *Activity) doSelect(params map[string]interface{}) (interface{}, error) 
 	var rows *sql.Rows
 
 	if a.stmt != nil {
+		log.RootLogger().Infof("Do select stmt: %v", a.stmt)
 		args := a.sqlStatement.GetPreparedStatementArgs(params)
 		rows, err = a.stmt.Query(args...)
 	} else {
+		log.RootLogger().Infof("Do select no stmt: %v", a.sqlStatement)
 		rows, err = a.db.Query(a.sqlStatement.ToStatementSQL(params))
 	}
 	if err != nil {
@@ -133,6 +153,9 @@ func (a *Activity) doSelect(params map[string]interface{}) (interface{}, error) 
 	} else {
 		results, err = getResults(a.dbHelper, rows)
 	}
+
+	//MAG
+	log.RootLogger().Infof("DoSelect rows: %v", rows)
 
 	if err != nil {
 		return nil, err
