@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/project-flogo/contrib/activity/sqlinsert/util"
+	"github.com/magallardo/contrib/activity/sqlinsert/util"
 	"github.com/project-flogo/core/activity"
 	"github.com/project-flogo/core/data/metadata"
 	"github.com/project-flogo/core/support/log"
