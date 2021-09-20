@@ -116,9 +116,9 @@ func (a *Activity) doInsert(params map[string]interface{}) (interface{}, error) 
 
 	if a.stmt != nil {
 		args := a.sqlStatement.GetPreparedStatementArgs(params)
-		rows, err = a.stmt.Insert(args...)
+		rows, err = a.stmt.Query(args...)
 	} else {
-		rows, err = a.db.Insert(a.sqlStatement.ToStatementSQL(params))
+		rows, err = a.db.Query(a.sqlStatement.ToStatementSQL(params))
 	}
 	if err != nil {
 		return nil, err
